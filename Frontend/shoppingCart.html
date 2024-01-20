@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <!-- Include Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .card-img {
+            height: 200px;
+            /* Set a fixed height for the images */
+            object-fit: cover;
+            /* Maintain aspect ratio without stretching */
+        }
+
+
+        .navbar-brand img {
+            height: 85px;
+            /* Adjust the height of the logo */
+        }
+
+
+        .card {
+            position: relative;
+        }
+
+        .remove-button {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            margin: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">
+            <img src="https://png.pngtree.com/png-clipart/20220213/original/pngtree-e-letter-logo-ecommerce-shop-store-design-png-image_7265997.png"
+                alt="Store Logo">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="http://127.0.0.1:5500/storeProducts.html">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="http://127.0.0.1:5500/shoppingCart.html">Shopping Cart</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="http://127.0.0.1:5500/signIn.html">Logout</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Profile</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+
+
+
+
+
+
+
+    <div class="container mt-5">
+        <h1>Shopping Cart</h1>
+        <div id="cart-items" class="row mt-3"></div>
+    </div>
+
+    <!-- Include Bootstrap JS and Axios -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script>
+        // Fetch products from the API
+        axios.get(`http://localhost:8080/demo3-1.0-SNAPSHOT/apiV1/shopping-cart/items?email=${sessionStorage.getItem("email")}`)
+            .then(response => {
+                const products = response.data;
+                displayProducts(products);
+            })
+            .catch(error => {
+                console.error('Error fetching products:', error);
+            });
+
+        function displayProducts(products) {
+            const cartItemsContainer = document.getElementById('cart-items');
+
+            products.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'col-md-4 mb-4';
+
+                card.innerHTML = `
+        <div class="card">
+          <img src="${product.imageAddr}" class="card-img-top" alt="${product.title}">
+          <div class="card-body">
+            <h5 class="card-title">${product.title}</h5>
+            <p class="card-text">Price: $${product.price.toFixed(2)}</p>
+            <p class="card-text">Quantity: ${product.quantity}</p>
+            <p class="card-text">Total: $${(product.amount).toFixed(2)}</p>
+            <button class="btn btn-success" onclick="increaseQuantity('${product.title}','${product.quantity}')">+</button>
+            <button class="btn btn-warning" onclick="decreaseQuantity('${product.title}','${product.quantity}')">-</button>
+          </div>
+          <button class="btn btn-danger remove-button" onclick="removeProduct('${product.title}')">Remove</button>
+        </div>
+      `;
+
+                cartItemsContainer.appendChild(card);
+            });
+        }
+
+        function increaseQuantity(title, qnt) {
+            if (qnt < 3) {
+                // Handle increasing the quantity of the product
+                // You can implement this part based on your requirements
+                axios.put(`http://localhost:8080/demo3-1.0-SNAPSHOT/apiV1/shopping-cart/edit/${sessionStorage.getItem("email")}/${title}/${++qnt}`).then((response)=>{
+                    console.log(`http://localhost:8080/demo3-1.0-SNAPSHOT/apiV1/shopping-cart/edit/${sessionStorage.getItem("email")}/${title}/${++qnt}`);
+                    window.location.reload(); // Reload the page
+                })
+                .catch((error)=>{
+                    console.error('Error making PUT request:', error);
+                });
+
+            }
+        }
+
+        function decreaseQuantity(title, qnt) {
+            if (qnt > 1) {
+                // Handle increasing the quantity of the product
+                // You can implement this part based on your requirements
+                axios.put(`http://localhost:8080/demo3-1.0-SNAPSHOT/apiV1/shopping-cart/edit/${sessionStorage.getItem("email")}/${title}/${--qnt}`).then((response)=>{
+                    console.log(`http://localhost:8080/demo3-1.0-SNAPSHOT/apiV1/shopping-cart/edit/${sessionStorage.getItem("email")}/${title}/${--qnt}`);
+                    window.location.reload(); // Reload the page
+                })
+                .catch((error)=>{
+                    console.error('Error making PUT request:', error);
+                });
+
+            }
+        }
+
+
+        function removeProduct(title) {
+            // Send a DELETE request
+            axios.delete(`http://localhost:8080/demo3-1.0-SNAPSHOT/apiV1/shopping-cart/remove/${sessionStorage.getItem("email")}/${title}`)
+                .then((response) => {
+                    console.log('DELETE request successful:', response.data);
+                    window.location.reload(); // Reload the page
+                })
+                .catch((error) => {
+                    console.error('Error making DELETE request:', error);
+                });
+        }
+
+    </script>
+
+</body>
+
+</html>
