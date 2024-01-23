@@ -1,0 +1,24 @@
+.card-img {
+    height: 200px;
+    /* Set a fixed height for the images */
+    object-fit: cover;
+    /* Maintain aspect ratio without stretching */
+}
+
+
+.navbar-brand img {
+    height: 85px;
+    /* Adjust the height of the logo */
+}
+
+
+.card {
+    position: relative;
+}
+
+.remove-button {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin: 10px;
+}
