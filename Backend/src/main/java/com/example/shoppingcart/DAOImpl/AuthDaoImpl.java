@@ -2,15 +2,30 @@ package com.example.shoppingcart.DAOImpl;
 
 import com.example.shoppingcart.DAO.AuthDao;
 import com.example.shoppingcart.Models.User;
+import org.apache.commons.dbcp2.BasicDataSource;
 import java.sql.*;
 
 public class AuthDaoImpl implements AuthDao {
+
+    private static final BasicDataSource dataSource = new BasicDataSource();
+
+
+    static {
+        final String databaseName = "ecommercedb";
+        dataSource.setUrl("jdbc:mysql://localhost:3306/"+databaseName);
+        dataSource.setUsername("root");
+        dataSource.setPassword("admin");
+
+        dataSource.setMinIdle(5);
+        dataSource.setMaxIdle(10);
+        dataSource.setMaxTotal(25);
+    }
 
 
     @Override
     public int signUp(User user) {
         //create database connection and add new user in database table:
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/ecommercedb", "root", "admin");
+        try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("call registerNewUser(?,?,?,?,?,?)")) {
 
             preparedStatement.setString(1, user.getFirstname());
@@ -24,7 +39,7 @@ public class AuthDaoImpl implements AuthDao {
             return 1;
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Error: " + e);
             // Handle the exception appropriately
         }
         return 0;
@@ -33,7 +48,7 @@ public class AuthDaoImpl implements AuthDao {
     @Override
     public String signIn(String email, String password) {
         //create database connection and add new user in database table:
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/ecommercedb", "root", "admin");
+        try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("call LoginUser(?,?)")) {
 
             preparedStatement.setString(1, email);
@@ -48,7 +63,7 @@ public class AuthDaoImpl implements AuthDao {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Error: "+ e);
             // Handle the exception appropriately
         }
         return "null!";

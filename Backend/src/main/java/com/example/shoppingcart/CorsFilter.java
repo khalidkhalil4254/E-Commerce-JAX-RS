@@ -9,7 +9,7 @@ public class CorsFilter implements ContainerResponseFilter {
 
     @Override
     public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) throws IOException {
-        //@TODO Change <http://127.0.0.1:5500> to any of allowed server addresses in order to access your services:
+        // Change <http://127.0.0.1:5500> to any of allowed server addresses in order to access your services:
         responseContext.getHeaders().add("Access-Control-Allow-Origin", "http://127.0.0.1:5500");
         responseContext.getHeaders().add("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization");
         responseContext.getHeaders().add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
