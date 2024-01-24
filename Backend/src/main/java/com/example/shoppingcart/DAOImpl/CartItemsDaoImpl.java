@@ -2,19 +2,37 @@ package com.example.shoppingcart.DAOImpl;
 
 import com.example.shoppingcart.DAO.CartItemsDao;
 import com.example.shoppingcart.Models.CartItem;
+import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CartItemsDaoImpl implements CartItemsDao {
+
+    private static final BasicDataSource dataSource = new BasicDataSource();
+
+
+    static {
+        final String databaseName = "ecommercedb";
+        dataSource.setUrl("jdbc:mysql://localhost:3306/"+databaseName);
+        dataSource.setUsername("root");
+        dataSource.setPassword("admin");
+
+        dataSource.setMinIdle(5);
+        dataSource.setMaxIdle(10);
+        dataSource.setMaxTotal(25);
+    }
+
+
+
     @Override
     public List<CartItem> getUserShoppingCartItems(String email) {
 
         List<CartItem> cartData = new ArrayList<>();
 
         //create database connection and add new user in database table:
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/ecommercedb", "root", "admin");
+        try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("call getUserShoppingCartItems(?)")) {
 
             preparedStatement.setString(1, email);
@@ -30,7 +48,7 @@ public class CartItemsDaoImpl implements CartItemsDao {
 
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Error: "+ e );
             // Handle the exception appropriately
         }
 
@@ -41,7 +59,7 @@ public class CartItemsDaoImpl implements CartItemsDao {
     public int addUserShoppingCartItem(String title, String email) {
 
         //create database connection and add new user in database table:
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/ecommercedb", "root", "admin");
+        try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("call addProductToShoppingCart(?,?)")) {
 
             preparedStatement.setString(1, title);
@@ -52,7 +70,7 @@ public class CartItemsDaoImpl implements CartItemsDao {
             return 1;
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Error: " + e);
             // Handle the exception appropriately
         }
 
@@ -64,7 +82,7 @@ public class CartItemsDaoImpl implements CartItemsDao {
 
 
         //create database connection and add new user in database table:
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/ecommercedb", "root", "admin");
+        try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("call editProductQntInShoppingCart(?,?,?)")) {
 
             preparedStatement.setString(1, productTitle);
@@ -76,7 +94,7 @@ public class CartItemsDaoImpl implements CartItemsDao {
             return 1;
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Error: " + e);
             // Handle the exception appropriately
         }
 
@@ -89,7 +107,7 @@ public class CartItemsDaoImpl implements CartItemsDao {
 
 
         //create database connection and add new user in database table:
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/ecommercedb", "root", "admin");
+        try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("call removeUserShoppingCartItem(?,?)")) {
 
             preparedStatement.setString(1, productTitle);
@@ -100,7 +118,7 @@ public class CartItemsDaoImpl implements CartItemsDao {
             return 1;
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Error: " + e);
             // Handle the exception appropriately
         }
 
