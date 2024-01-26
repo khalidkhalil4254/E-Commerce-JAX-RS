@@ -2,6 +2,7 @@ package com.example.shoppingcart.DAOImpl;
 
 import com.example.shoppingcart.DAO.ProductDao;
 import com.example.shoppingcart.Models.Product;
+import com.example.shoppingcart.Models.addProductModel;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.sql.*;
@@ -51,5 +52,65 @@ public class ProductDaoImpl implements ProductDao {
             // Handle the exception appropriately
         }
         return productsData;
+    }
+
+    @Override
+    public addProductModel addProductToStore(addProductModel item) {
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("call AddNewProduct(?,?,?,?,?)")) {
+            preparedStatement.setString(1, item.getTitle());
+            preparedStatement.setString(2, item.getDescription());
+            preparedStatement.setString(3, item.getImageAddr());
+            preparedStatement.setDouble(4, item.getPrice());
+            preparedStatement.setInt(5, item.getQuantity());
+            preparedStatement.executeQuery();
+
+            return item;
+
+        } catch (SQLException e) {
+            System.out.println("Error: " + e);
+            // Handle the exception appropriately
+        }
+
+        return null;
+    }
+
+    @Override
+    public int deleteProductFromStore(String title) {
+        try(Connection con = dataSource.getConnection();
+        PreparedStatement preparedStatement = con.prepareStatement("call deleteProduct(?)")){
+
+            preparedStatement.setString(1, title);
+
+            preparedStatement.executeQuery();
+
+            return 1;
+        }catch(Exception err){
+            System.out.println("Error deleting product from store: " + err);
+        }
+
+        return -1;
+    }
+
+    @Override
+    public int editProductsInStore(String title, String description, double price, int Qnt) {
+
+        try(Connection con = dataSource.getConnection();
+            PreparedStatement preparedStatement= con.prepareStatement("call EditProduct(?,?,?,?)");){
+
+            preparedStatement.setString(1,title);
+            preparedStatement.setString(2,description);
+            preparedStatement.setDouble(3, price);
+            preparedStatement.setInt(4, Qnt);
+
+            preparedStatement.executeQuery();
+
+            return 1;
+        }catch(Exception err){
+            System.out.println("Error Editing Product: "+ err);
+        }
+
+        return -1;
     }
 }

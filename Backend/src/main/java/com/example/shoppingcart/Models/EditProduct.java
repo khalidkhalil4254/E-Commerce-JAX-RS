@@ -8,19 +8,15 @@ import lombok.NoArgsConstructor;
 import javax.json.bind.annotation.JsonbProperty;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class Product {
-
-    private int id;
+@AllArgsConstructor
+public class EditProduct {
     @JsonbProperty("title")
     private String title;
-    @JsonbProperty("description")
-    private String description;
-    @JsonbProperty("imageAddr")
-    private String imageAddr;
+    @JsonbProperty("des")
+    private String des;
     @JsonbProperty("price")
-    private String price;
-    @JsonbProperty("Qnt")
-    private String Qnt;
+    private double price;
+    @JsonbProperty("qnt")
+    private int qnt;
 }
