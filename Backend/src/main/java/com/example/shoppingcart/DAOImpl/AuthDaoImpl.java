@@ -3,6 +3,8 @@ package com.example.shoppingcart.DAOImpl;
 import com.example.shoppingcart.DAO.AuthDao;
 import com.example.shoppingcart.Models.User;
 import org.apache.commons.dbcp2.BasicDataSource;
+
+import java.io.Serializable;
 import java.sql.*;
 
 public class AuthDaoImpl implements AuthDao {
