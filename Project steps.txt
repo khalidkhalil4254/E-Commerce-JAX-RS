@@ -1,0 +1,19 @@
+Project envolved phases & steps:
+
+
+- Phase(1) Backend(MySQL, Jax-RS):	(✅ Completed)
+
+1- Design, create and test database(tables, stored procedures).	(✅)
+2- Create restful web service:	(✅)
+	1) Create data models.	
+	2) Create data access object(DAOs) interfaces.	
+	3) Implement DAOs in DAOImpl.	
+	4) Create resources endpoints.	
+	5) Implement those endpoints using implemented DAOs.	
+3- Test endpoints.	(✅)
+
+- Phase(2) Frontend(Html/CSS/Bootstrap, AxiosJs):	(✅ Completed)
+
+4- Develop frontend using bootstrap.	(✅)
+5- Integrate this frontend with restful web service using AxiosJs.	(✅)
+6- Final overall testing.	(✅)
