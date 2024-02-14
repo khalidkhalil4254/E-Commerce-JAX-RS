@@ -179,7 +179,7 @@ DROP PROCEDURE IF EXISTS removeUserShoppingCartItem;
 
 
 # _________________ [stored procedures testing] _________________
-call registerNewUser("FName" , "LName" ,"youremail@gmail.com","yourPassword","yourADDR","+201025975165");
+call registerNewUser("FName" , "LName" ,"youremail@gmail.com","yourPassword","yourADDR","+0123456789");
 select * from Users;
 
 call LoginUser("youremail@gmail.com","yourPassword");
