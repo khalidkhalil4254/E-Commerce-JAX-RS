@@ -2,7 +2,7 @@ create database ecommercedb;
 
 use ecommercedb;
 
-
+#__________________________________________Tseting______________________________
 # _________________ [tables] _________________
 
 create table Products(
